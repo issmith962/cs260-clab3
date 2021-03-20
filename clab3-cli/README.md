@@ -1,4 +1,4 @@
-# learning-vue-cli
+# Creative Lab #3 for cs260
 
 ## Project setup
 ```
