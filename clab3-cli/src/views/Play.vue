@@ -10,12 +10,9 @@
 				<input type="text" id="oNameInput" v-model="yName" name="oNameInput" maxlength="4">
 			</form>
 		</div>
-    <board turn="x" :position=
-			"[ 
-				['-', '-', '-'], 
-				['-', '-', '-'], 
-				['-', '-', '-']
-			]" />
+    <board @gameover="onGameover" :turn="turn" :position="position" :playable="validNames"/>
+			
+		<button v-if="gameover" id='play-again' v-on:click="playAgain()">Play Again!</button>
   </div>
 </template>
 
@@ -30,9 +27,25 @@ export default {
   },
 	data() {
 		return {
+			gameover: false,
 			xName: "", 
 			yName: "",
+			turn: "x", 
+			position: [['-', '-', '-'], 
+								['-', '-', '-'], 
+								['-', '-', '-']],
 		}
+	},
+	methods: {
+		onGameover(gameover) {
+			this.gameover = gameover; 
+		}, 
+		playAgain() {
+			this.gameover = false;
+			this.turn = "x"; 
+			this.position = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]; 
+		}
+			 	
 	},
 	computed: {
 		validNames() {

@@ -3,35 +3,35 @@
 		<div id="container">
 			<div class="row">
 				<div class="move-box" id="box-0" v-on:click="makeMove(0)">
-					<img v-show="show.box0" :src="boxes.box0" alt=" "/> 
+					<img v-show="show.box0" :src="boxes.box0" alt=" "/>
 				</div>
 				<div class="move-box" id="box-1" v-on:click="makeMove(1)">
-					<img v-show="show.box1" :src="boxes.box1" alt=" "/> 
+					<img v-show="show.box1" :src="boxes.box1" alt=" "/>
 				</div>
 				<div class="move-box" id="box-2" v-on:click="makeMove(2)">
-					<img v-show="show.box2" :src="boxes.box2" alt=" "/> 
+					<img v-show="show.box2" :src="boxes.box2" alt=" "/>
 				</div>
 			</div>
 			<div class="row">
 				<div class="move-box" id="box-3" v-on:click="makeMove(3)">
-					<img v-show="show.box3" :src="boxes.box3" alt=" "/> 
+					<img v-show="show.box3" :src="boxes.box3" alt=" "/>
 				</div>
 				<div class="move-box" id="box-4" v-on:click="makeMove(4)">
-					<img v-show="show.box4" :src="boxes.box4" alt=" "/> 
+					<img v-show="show.box4" :src="boxes.box4" alt=" "/>
 				</div>
 				<div class="move-box" id="box-5" v-on:click="makeMove(5)">
-					<img v-show="show.box5" :src="boxes.box5" alt=" "/> 
+					<img v-show="show.box5" :src="boxes.box5" alt=" "/>
 				</div>
 			</div>
 			<div class="row">
 				<div class="move-box" id="box-6" v-on:click="makeMove(6)">
-					<img v-show="show.box6" :src="boxes.box6" alt=" "/> 
+					<img v-show="show.box6" :src="boxes.box6" alt=" "/>
 				</div>
 				<div class="move-box" id="box-7" v-on:click="makeMove(7)">
-					<img v-show="show.box7" :src="boxes.box7" alt=" "/> 
+					<img v-show="show.box7" :src="boxes.box7" alt=" "/>
 				</div>
 				<div class="move-box" id="box-8" v-on:click="makeMove(8)">
-					<img v-show="show.box8" :src="boxes.box8" alt=" "/> 
+					<img v-show="show.box8" :src="boxes.box8" alt=" "/>
 				</div>
 			</div>
 		</div>
@@ -43,18 +43,16 @@ export default {
   name: "board",
   props: {
     position: Array,
-		turn: String, 
+		turn: String,
+		playable: Boolean,
 		/*
 			"o" - o's turn
 			"x" - x's turn
-			"o-won" - o's won
-			"x-won" - x's won
 		*/
   },
 	data() {
 		return {
-			currentPosition: this.position, 
-			currentTurn: this.turn, 
+			gameover: false,
 			boxes: {
 				box0: "#",
 				box1: "#",
@@ -66,7 +64,7 @@ export default {
 				box7: "#",
 				box8: "#",
 			},
-			
+
 			show: {
 				box0: false,
 				box1: false,
@@ -82,46 +80,81 @@ export default {
 		}
 	},
 	computed: {
-		
+
 	},
 	methods: {
 		checkForFinish() {
 			// First check for an actual win
-			// Then check if board is filled
-			// (If so, then it's a draw if no one won)
-			
-			// If finished, pop up "Play Again" button
-			// Also pop up "Clear board" button
-		},
-		
-		makeMove(move) {
-			let row = Math.floor(move / 3); 
-			let col = move % 3; 
-			if (this.currentPosition[row][col] != "-") {
-				return; 
-			} else {
-				this.currentPosition[row][col] = this.currentTurn;
+			let p = this.position;
+			function checker(p1, p2, p3) {
+	 			if ((p1 == 'x') && (p2 == 'x') && (p3 == 'x')) {
+					return "x-won";
+				}
+				else if ((p1 == 'o') && (p2 == 'o') && (p3 == 'o')) {
+					return "o-won";
+				}
+				else {
+					return false;
+				}
 			}
-			// checkForWin() 
-			switch(this.currentTurn) {
-				case "x": 
+			let wins = [
+				checker(p[0][0], p[0][1], p[0][2]),
+				checker(p[1][0], p[1][1], p[1][2]),
+				checker(p[2][0], p[2][1], p[2][2]),
+				checker(p[0][0], p[1][0], p[2][0]),
+				checker(p[0][1], p[1][1], p[2][1]),
+				checker(p[0][2], p[1][2], p[2][2]),
+				checker(p[0][0], p[1][1], p[2][2]),
+				checker(p[0][2], p[1][1], p[2][0])];
+			for (const result of wins) {
+				if (result) {
+					return result;
+				}
+			}
+
+			if ((p[0][0] != '-') &&
+					(p[0][1] != '-') &&
+					(p[0][2] != '-') &&
+					(p[1][0] != '-') &&
+					(p[1][1] != '-') &&
+					(p[1][2] != '-') &&
+					(p[2][0] != '-') &&
+					(p[2][1] != '-') &&
+					(p[2][2] != '-')) {
+				return "t"
+			} else {
+				return false;
+			}
+		},
+
+		makeMove(move) {
+			if (this.gameover || !this.playable) 
+				return
+			let row = Math.floor(move / 3);
+			let col = move % 3;
+			if (this.position[row][col] != "-") {
+				return;
+			} else {
+				this.position[row][col] = this.turn;
+			}
+			switch(this.turn) {
+				case "x":
 					this.boxes["box" + move] = require("@/assets/x.png");
-					this.currentTurn = "o";
-					this.show["box" + move] = true; 
+					this.turn = "o";
+					this.show["box" + move] = true;
 					break;
 				case "o": 
-					this.boxes["box" + move] = require("@/assets/o.jpg"); 
-					this.currentTurn = "x";
-					this.show["box" + move] = true; 
-					break;
-				case "x-won": 
-					break;
-				case "o-won": 
+					this.boxes["box" + move] = require("@/assets/o.jpg");
+					this.turn = "x";
+					this.show["box" + move] = true;
 					break;
 				default:
 					break;
 			}
-			return;
+			this.gameover = this.checkForFinish();
+			if (this.gameover) {
+				this.$emit("gameover", this.gameover);
+			}
 		},
 	},
 };
@@ -132,6 +165,7 @@ export default {
 
 .board {
 	display:flex;
+	flex-direction:column;
 	justify-content:center;
 	align-items:center;
 }
@@ -155,7 +189,7 @@ export default {
 	display:flex;
 	justify-content:center;
 	align-items:center;
-	flex-grow:1; 
+	flex-grow:1;
 	flex-basis:0;
 	margin:0 0;
 }
@@ -165,46 +199,46 @@ export default {
 	object-fit:contain;
 }
 #box-0 {
-	border-right:1px solid black;	
-	border-bottom:1px solid black;	
+	border-right:1px solid black;
+	border-bottom:1px solid black;
 }
 #box-1 {
-	border-left:1px solid black;	
-	border-right:1px solid black;	
-	border-bottom:1px solid black;	
+	border-left:1px solid black;
+	border-right:1px solid black;
+	border-bottom:1px solid black;
 }
 #box-2 {
-	border-left:1px solid black;	
-	border-bottom:1px solid black;	
+	border-left:1px solid black;
+	border-bottom:1px solid black;
 }
 #box-3 {
-	border-right:1px solid black;	
-	border-top:1px solid black;	
-	border-bottom:1px solid black;	
+	border-right:1px solid black;
+	border-top:1px solid black;
+	border-bottom:1px solid black;
 }
 #box-4 {
-	border-right:1px solid black;	
-	border-left:1px solid black;	
-	border-top:1px solid black;	
-	border-bottom:1px solid black;	
+	border-right:1px solid black;
+	border-left:1px solid black;
+	border-top:1px solid black;
+	border-bottom:1px solid black;
 }
 #box-5 {
-	border-left:1px solid black;	
-	border-top:1px solid black;	
-	border-bottom:1px solid black;	
+	border-left:1px solid black;
+	border-top:1px solid black;
+	border-bottom:1px solid black;
 }
 #box-6 {
-	border-right:1px solid black;	
-	border-top:1px solid black;	
+	border-right:1px solid black;
+	border-top:1px solid black;
 }
 #box-7 {
-	border-right:1px solid black;	
-	border-left:1px solid black;	
-	border-top:1px solid black;	
+	border-right:1px solid black;
+	border-left:1px solid black;
+	border-top:1px solid black;
 }
 #box-8 {
-	border-top:1px solid black;	
-	border-left:1px solid black;	
+	border-top:1px solid black;
+	border-left:1px solid black;
 }
 
 </style>
