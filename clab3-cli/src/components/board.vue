@@ -2,30 +2,36 @@
   <div class="board">
 		<div id="container">
 			<div class="row">
-				<div class="move-box" id="box-1">
-					<img class="x-img" src="@/assets/x.png"/>
+				<div class="move-box" id="box-0" v-on:click="makeMove(0)">
+					<img v-show="show.box0" :src="boxes.box0" alt=" "/> 
 				</div>
-				<div class="move-box" id="box-2">
-					<img class="x-img" src="@/assets/x.png"/>
+				<div class="move-box" id="box-1" v-on:click="makeMove(1)">
+					<img v-show="show.box1" :src="boxes.box1" alt=" "/> 
 				</div>
-				<div class="move-box" id="box-3">
-					<img class="x-img" src="@/assets/x.png"/>
+				<div class="move-box" id="box-2" v-on:click="makeMove(2)">
+					<img v-show="show.box2" :src="boxes.box2" alt=" "/> 
 				</div>
 			</div>
 			<div class="row">
-				<div class="move-box" id="box-4">
-					<img class="x-img" src="@/assets/x.png"/>
+				<div class="move-box" id="box-3" v-on:click="makeMove(3)">
+					<img v-show="show.box3" :src="boxes.box3" alt=" "/> 
 				</div>
-				<div class="move-box" id="box-5">
-					<img class="o-img" src="@/assets/o.jpg"/>
+				<div class="move-box" id="box-4" v-on:click="makeMove(4)">
+					<img v-show="show.box4" :src="boxes.box4" alt=" "/> 
 				</div>
-				<div class="move-box" id="box-6"></div>
+				<div class="move-box" id="box-5" v-on:click="makeMove(5)">
+					<img v-show="show.box5" :src="boxes.box5" alt=" "/> 
+				</div>
 			</div>
 			<div class="row">
-				<div class="move-box" id="box-7"></div>
-				<div class="move-box" id="box-8"></div>
-				<div class="move-box" id="box-9">
-					<img class="o-img" src="@/assets/o.jpg"/>
+				<div class="move-box" id="box-6" v-on:click="makeMove(6)">
+					<img v-show="show.box6" :src="boxes.box6" alt=" "/> 
+				</div>
+				<div class="move-box" id="box-7" v-on:click="makeMove(7)">
+					<img v-show="show.box7" :src="boxes.box7" alt=" "/> 
+				</div>
+				<div class="move-box" id="box-8" v-on:click="makeMove(8)">
+					<img v-show="show.box8" :src="boxes.box8" alt=" "/> 
 				</div>
 			</div>
 		</div>
@@ -45,6 +51,79 @@ export default {
 			"x-won" - x's won
 		*/
   },
+	data() {
+		return {
+			currentPosition: this.position, 
+			currentTurn: this.turn, 
+			boxes: {
+				box0: "#",
+				box1: "#",
+				box2: "#",
+				box3: "#",
+				box4: "#",
+				box5: "#",
+				box6: "#",
+				box7: "#",
+				box8: "#",
+			},
+			
+			show: {
+				box0: false,
+				box1: false,
+				box2: false,
+				box3: false,
+				box4: false,
+				box5: false,
+				box6: false,
+				box7: false,
+				box8: false,
+			},
+
+		}
+	},
+	computed: {
+		
+	},
+	methods: {
+		checkForFinish() {
+			// First check for an actual win
+			// Then check if board is filled
+			// (If so, then it's a draw if no one won)
+			
+			// If finished, pop up "Play Again" button
+			// Also pop up "Clear board" button
+		},
+		
+		makeMove(move) {
+			let row = Math.floor(move / 3); 
+			let col = move % 3; 
+			if (this.currentPosition[row][col] != "-") {
+				return; 
+			} else {
+				this.currentPosition[row][col] = this.currentTurn;
+			}
+			// checkForWin() 
+			switch(this.currentTurn) {
+				case "x": 
+					this.boxes["box" + move] = require("@/assets/x.png");
+					this.currentTurn = "o";
+					this.show["box" + move] = true; 
+					break;
+				case "o": 
+					this.boxes["box" + move] = require("@/assets/o.jpg"); 
+					this.currentTurn = "x";
+					this.show["box" + move] = true; 
+					break;
+				case "x-won": 
+					break;
+				case "o-won": 
+					break;
+				default:
+					break;
+			}
+			return;
+		},
+	},
 };
 </script>
 
@@ -80,55 +159,50 @@ export default {
 	flex-basis:0;
 	margin:0 0;
 }
-.x-img {
-	width:60%;
-	height:60%;
-	object-fit:contain;
-}
-.o-img {
+.move-box img {
 	width:70%;
 	height:70%;
 	object-fit:contain;
 }
+#box-0 {
+	border-right:1px solid black;	
+	border-bottom:1px solid black;	
+}
 #box-1 {
+	border-left:1px solid black;	
 	border-right:1px solid black;	
 	border-bottom:1px solid black;	
 }
 #box-2 {
 	border-left:1px solid black;	
-	border-right:1px solid black;	
 	border-bottom:1px solid black;	
 }
 #box-3 {
-	border-left:1px solid black;	
-	border-bottom:1px solid black;	
-}
-#box-4 {
 	border-right:1px solid black;	
 	border-top:1px solid black;	
 	border-bottom:1px solid black;	
 }
-#box-5 {
+#box-4 {
 	border-right:1px solid black;	
+	border-left:1px solid black;	
+	border-top:1px solid black;	
+	border-bottom:1px solid black;	
+}
+#box-5 {
 	border-left:1px solid black;	
 	border-top:1px solid black;	
 	border-bottom:1px solid black;	
 }
 #box-6 {
-	border-left:1px solid black;	
+	border-right:1px solid black;	
 	border-top:1px solid black;	
-	border-bottom:1px solid black;	
 }
 #box-7 {
 	border-right:1px solid black;	
-	border-top:1px solid black;	
-}
-#box-8 {
-	border-right:1px solid black;	
 	border-left:1px solid black;	
 	border-top:1px solid black;	
 }
-#box-9 {
+#box-8 {
 	border-top:1px solid black;	
 	border-left:1px solid black;	
 }
