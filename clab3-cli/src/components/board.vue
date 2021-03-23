@@ -43,7 +43,6 @@ export default {
   name: "board",
   props: {
 	  position: Array,
-		turn: String,
 		playable: Boolean,
 		gameover: Boolean,
 		/*
@@ -53,6 +52,7 @@ export default {
   },
 	data() {
 		return {
+			turn: "x",
 			squares: [[false,false,false],
 							[false,false,false],
 							[false,false,false]], 
@@ -62,7 +62,6 @@ export default {
 		position: {
 			deep: true, 
 			handler() {
-				debugger
 				let emptyBoard = true; 
 				for (let i = 0; i < 3; i++) {
 					for (let j = 0; j < 3; j++) {
@@ -85,6 +84,7 @@ export default {
 					this.$set(this.squares, 0, [false,false,false]);   
 					this.$set(this.squares, 1, [false,false,false]);   
 					this.$set(this.squares, 2, [false,false,false]);   
+					this.turn = "x"; 
 				}
 			},
 		},

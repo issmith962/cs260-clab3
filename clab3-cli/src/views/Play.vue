@@ -7,7 +7,7 @@
 			</form>
 			<form onsubmit="event.preventDefault();">
 				<label for="oNameInput">Player O Name:</label>
-				<input type="text" id="oNameInput" v-model="yName" name="oNameInput" maxlength="4">
+				<input type="text" id="oNameInput" v-model="oName" name="oNameInput" maxlength="4">
 			</form>
 		</div>
     <board @gameover="onGameover" :turn="turn" :position="position" :gameover="gameover" :playable="validNames"/>
@@ -29,8 +29,7 @@ export default {
 		return {
 			gameover: false,
 			xName: "", 
-			yName: "",
-			turn: "x", 
+			oName: "",
 			position: [['-', '-', '-'], 
 								['-', '-', '-'], 
 								['-', '-', '-']],
@@ -39,21 +38,48 @@ export default {
 	methods: {
 		onGameover(gameover) {
 			this.gameover = gameover; 
+			this.logGame(); 
 		}, 
+		logGame() {
+			let records = this.$root.$data.playerRecords;
+			// example record: {name: asdf, wins: 10, losses: 15, ties: 100} 
+			let xRecord = records.find(el => el.name == this.xName); 
+			let oRecord = records.find(el => el.name == this.oName); 
+			if (xRecord == undefined) {
+				xRecord = {name: this.xName, wins: 0, losses: 0, ties: 0}; 
+				records.push(xRecord); 
+			}
+			if (oRecord == undefined) {
+				oRecord = {name: this.oName, wins: 0, losses: 0, ties: 0}; 
+				records.push(oRecord); 
+			}
+				
+			if (this.gameover == "x-won") {
+				xRecord.wins++;
+				oRecord.losses++; 
+			} else if (this.gameover == "o-won") {
+				xRecord.losses++;
+				oRecord.wins++;
+			} else if (this.gameover == "t") {
+				xRecord.ties++; 
+				oRecord.ties++;
+			} else {
+				console.log("ERROR with gameover code");
+			}
+		},
 		playAgain() {
 			this.gameover = false;
-			this.turn = "x"; 
 			this.position = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]; 
 		}
 			 	
 	},
 	computed: {
 		validNames() {
-			return (this.xName != this.yName) 
+			return (this.xName != this.oName) 
 				&& !(/\s/g.test(this.xName)) 
-				&&  !(/\s/g.test(this.yName))
+				&&  !(/\s/g.test(this.oName))
 				&& (this.xName != "")
-				&& (this.yName != ""); 
+				&& (this.oName != ""); 
 		},
 	}, 
 };
