@@ -100,6 +100,13 @@ export default {
 	font-weight:bold;
 	padding: 0px 5px;
 }
+.headers {
+	flex-basis:0; 
+	flex-grow:1;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+}
 #rankings {
 }
 .row {
