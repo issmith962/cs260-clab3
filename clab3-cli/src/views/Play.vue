@@ -1,18 +1,26 @@
 <template>
   <div class="play">
 		<div id="player-names">
-			<form onsubmit="event.preventDefault();">
-				<label for="xNameInput">Player X Name:</label>
-				<input type="text" id="xNameInput" v-model="xName" name="xNameInput" maxlength="4">
+			<form id="x-name-form" onsubmit="event.preventDefault();">
+				<label for="x-name-input">Player X Name:</label>
+				<br>
+				<input type="text" id="x-name-input" v-model="xName" name="xNameInput" maxlength="4">
 			</form>
-			<form onsubmit="event.preventDefault();">
-				<label for="oNameInput">Player O Name:</label>
-				<input type="text" id="oNameInput" v-model="oName" name="oNameInput" maxlength="4">
+			<form  id="o-name-form" onsubmit="event.preventDefault();">
+				<label for="o-name-input">Player O Name:</label>
+				<br>
+				<input type="text" id="o-name-input" v-model="oName" name="oNameInput" maxlength="4">
 			</form>
 		</div>
-    <board @gameover="onGameover" :turn="turn" :position="position" :gameover="gameover" :playable="validNames"/>
+    <board id="board" @gameover="onGameover" :position="position" :gameover="gameover" :playable="validNames"/>
+		<div id="name-alert" v-if="!validNames">
+			<h3 id="name-alert-text">Make sure both players have names (4 char. max)</h3>
+		</div>
 			
-		<button v-if="gameover" id='play-again' v-on:click="playAgain()">Play Again!</button>
+		<div id="button-container">
+			<button v-if="gameover" id='play-again' v-on:click="playAgain()">Play Again!</button>
+			<button v-if="gameover" id='clear' v-on:click="clear()">Clear</button>
+		</div>
   </div>
 </template>
 
@@ -70,7 +78,13 @@ export default {
 		playAgain() {
 			this.gameover = false;
 			this.position = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]; 
-		}
+		},
+		clear() {
+			this.gameover = false;
+			this.position = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]; 
+			this.xName = ""; 
+			this.oName = ""; 
+		},
 			 	
 	},
 	computed: {
@@ -86,11 +100,60 @@ export default {
 </script>
 
 <style scoped>
-
+.play {
+	display: flex; 
+	flex-direction: column; 
+}
 #player-names {
 	display:flex;
 	flex-direction:row;
 	justify-content:center;
+	margin-bottom:10px;
+}
+#x-name-form {
+	margin-right:20px;
+}
+#o-name-form {
+	margin-left:20px;
+}
+#x-name-input {
+	width:100px;
+}
+#o-name-input {
+	width:100px;
+}
+#name-alert {
+	display:flex; 
+	justify-content:center;
+}
+#name-alert-text {
+	padding: 0px 50px; 
+}
+#board {
+	margin-top:10px;
+	margin-bottom:10px;
+}
+#button-container {
+	display:flex;
+	flex-direction:column;
+	align-items:center;
+	margin-bottom:20px;
+}
+#play-again {
+	width:50%;
+	border:1px solid black;
+	margin-bottom:5px;
+	padding:4px;
+}
+#clear {
+	width:50%;
+	border:1px solid black;
+	padding:4px;
+}
+
+@media (min-width: 700px) {
+	#board {
+	}
 }
 
 </style>

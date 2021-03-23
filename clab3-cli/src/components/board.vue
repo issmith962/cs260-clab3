@@ -3,35 +3,35 @@
 		<div id="container">
 			<div class="row">
 				<div class="move-box" id="box-0" v-on:click="makeMove(0)">
-					<img v-show="squares[0][0]" :src="squares[0][0]" alt=" "/>
+					<img v-bind:class="move0" v-show="squares[0][0]" :src="squares[0][0]" alt=" "/>
 				</div>
 				<div class="move-box" id="box-1" v-on:click="makeMove(1)">
-					<img v-show="squares[0][1]" :src="squares[0][1]" alt=" "/>
+					<img v-bind:class="move1" v-show="squares[0][1]" :src="squares[0][1]" alt=" "/>
 				</div>
 				<div class="move-box" id="box-2" v-on:click="makeMove(2)">
-					<img v-show="squares[0][2]" :src="squares[0][2]" alt=" "/>
+					<img v-bind:class="move2" v-show="squares[0][2]" :src="squares[0][2]" alt=" "/>
 				</div>
 			</div>
 			<div class="row">
 				<div class="move-box" id="box-3" v-on:click="makeMove(3)">
-					<img v-show="squares[1][0]" :src="squares[1][0]" alt=" "/>
+					<img v-bind:class="move3" v-show="squares[1][0]" :src="squares[1][0]" alt=" "/>
 				</div>
 				<div class="move-box" id="box-4" v-on:click="makeMove(4)">
-					<img v-show="squares[1][1]" :src="squares[1][1]" alt=" "/>
+					<img v-bind:class="move4" v-show="squares[1][1]" :src="squares[1][1]" alt=" "/>
 				</div>
 				<div class="move-box" id="box-5" v-on:click="makeMove(5)">
-					<img v-show="squares[1][2]" :src="squares[1][2]" alt=" "/>
+					<img v-bind:class="move5" v-show="squares[1][2]" :src="squares[1][2]" alt=" "/>
 				</div>
 			</div>
 			<div class="row">
 				<div class="move-box" id="box-6" v-on:click="makeMove(6)">
-					<img v-show="squares[2][0]" :src="squares[2][0]" alt=" "/>
+					<img v-bind:class="move6" v-show="squares[2][0]" :src="squares[2][0]" alt=" "/>
 				</div>
 				<div class="move-box" id="box-7" v-on:click="makeMove(7)">
-					<img v-show="squares[2][1]" :src="squares[2][1]" alt=" "/>
+					<img v-bind:class="move7" v-show="squares[2][1]" :src="squares[2][1]" alt=" "/>
 				</div>
 				<div class="move-box" id="box-8" v-on:click="makeMove(8)">
-					<img v-show="squares[2][2]" :src="squares[2][2]" alt=" "/>
+					<img v-bind:class="move8" v-show="squares[2][2]" :src="squares[2][2]" alt=" "/>
 				</div>
 			</div>
 		</div>
@@ -50,6 +50,62 @@ export default {
 			"x" - x's turn
 		*/
   },
+	computed: {
+		move0: function() {
+			return {
+				x: this.position[0][0] == "x",
+				o: this.position[0][0] == "o"
+			}
+		},
+		move1: function() {
+			return {
+				x: this.position[0][1] == "x",
+				o: this.position[0][1] == "o"
+			}
+		},
+		move2: function() {
+			return {
+				x: this.position[0][2] == "x",
+				o: this.position[0][2] == "o"
+			}
+		},
+		move3: function() {
+			return {
+				x: this.position[1][0] == "x",
+				o: this.position[1][0] == "o"
+			}
+		},
+		move4: function() {
+			return {
+				x: this.position[1][1] == "x",
+				o: this.position[1][1] == "o"
+			}
+		},
+		move5: function() {
+			return {
+				x: this.position[1][2] == "x",
+				o: this.position[1][2] == "o"
+			}
+		},
+		move6: function() {
+			return {
+				x: this.position[2][0] == "x",
+				o: this.position[2][0] == "o"
+			}
+		},
+		move7: function() {
+			return {
+				x: this.position[2][1] == "x",
+				o: this.position[2][1] == "o"
+			}
+		},
+		move8: function() {
+			return {
+				x: this.position[2][2] == "x",
+				o: this.position[2][2] == "o"
+			}
+		},
+	},
 	data() {
 		return {
 			turn: "x",
@@ -67,15 +123,15 @@ export default {
 					for (let j = 0; j < 3; j++) {
 						if (this.position[i][j] == "x") {
 							emptyBoard = false;
-							//this.squares[i][j] = require("@/assets/x.png");
 							const newRow = this.squares[i].slice(0); 
 							newRow[j] = require("@/assets/x.png");
 							this.$set(this.squares, i, newRow); 
 						} else if (this.position[i][j] == "o") {
 							emptyBoard = false;
-							this.squares[i][j] = require("@/assets/o.jpg");
 							const newRow = this.squares[i].slice(0); 
-							newRow[j] = require("@/assets/o.jpg");
+							//newRow[j] = require("@/assets/o.jpg");
+							//newRow[j] = require("@/assets/o2.png");
+							newRow[j] = require("@/assets/o3.png");
 							this.$set(this.squares, i, newRow); 
 						}
 					}
@@ -199,9 +255,14 @@ export default {
 	flex-basis:0;
 	margin:0 0;
 }
-.move-box img {
+.x {
 	width:70%;
 	height:70%;
+	object-fit:contain;
+}
+.o {
+	width:95%;
+	height:95%;
 	object-fit:contain;
 }
 #box-0 {

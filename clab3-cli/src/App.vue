@@ -10,7 +10,7 @@
 			</div>
 			<router-view />
 			<div id="footer">
-				<a href="https://github.com/issmith962/cs260-clab3.git">https://github.com/issmith962/cs260-clab3.git</a>
+				<a id="git-link" href="https://github.com/issmith962/cs260-clab3.git">https://github.com/issmith962/cs260-clab3.git</a>
 			</div>
 		</div>
   </div>
@@ -18,11 +18,12 @@
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+	background-color:#ececec;
 }
 
 #page {
@@ -31,17 +32,26 @@
 }
 
 #nav {
-  padding: 30px;
-	padding-top: 10px;
+  padding: 20px;
+	padding-top: 20px;
 }
 
 #nav a {
   font-weight: bold;
   color: #2c3e50;
+	padding:0px 10px;
+	text-decoration:none;
 }
 
 #nav a.router-link-exact-active {
-  color: #42b983;
+  color: #cf291d;
+}
+
+#header {
+	display:flex;
+	justify-content:center;
+	background-color: #b50717; 
+	color: #131313;
 }
 
 #footer {
@@ -52,8 +62,13 @@
 	width:100%;
 	padding:5px;
 	
-	position:fixed;
-	bottom:0;
+	height:5vh;
+	color: #131313;
+	background-color: #b50717; 
+}
+#git-link {
+	text-decoration:none!important;
+	color:#131313;
 }
 
 </style>

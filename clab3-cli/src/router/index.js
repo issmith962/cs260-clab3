@@ -5,6 +5,11 @@ import Play from "../views/Play.vue";
 Vue.use(VueRouter);
 
 const routes = [
+	{
+		path: "/",
+		name: "Play", 
+		component: Play,
+	},
   {
     path: "/play",
     name: "Play",
