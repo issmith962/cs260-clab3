@@ -12,11 +12,50 @@
 				<input type="text" id="o-name-input" v-model="oName" name="oNameInput" maxlength="4">
 			</form>
 		</div>
-    <board id="board" @gameover="onGameover" :position="position" :gameover="gameover" :playable="validNames"/>
+
+    <div class="board">
+  		<div id="container">
+  			<div class="row">
+  				<div class="move-box" id="box-0" v-on:click="makeMove(0)">
+  					<img v-bind:class="move0" v-show="squares[0][0]" :src="squares[0][0]" alt=" "/>
+  				</div>
+  				<div class="move-box" id="box-1" v-on:click="makeMove(1)">
+  					<img v-bind:class="move1" v-show="squares[0][1]" :src="squares[0][1]" alt=" "/>
+  				</div>
+  				<div class="move-box" id="box-2" v-on:click="makeMove(2)">
+  					<img v-bind:class="move2" v-show="squares[0][2]" :src="squares[0][2]" alt=" "/>
+  				</div>
+  			</div>
+  			<div class="row">
+  				<div class="move-box" id="box-3" v-on:click="makeMove(3)">
+  					<img v-bind:class="move3" v-show="squares[1][0]" :src="squares[1][0]" alt=" "/>
+  				</div>
+  				<div class="move-box" id="box-4" v-on:click="makeMove(4)">
+  					<img v-bind:class="move4" v-show="squares[1][1]" :src="squares[1][1]" alt=" "/>
+  				</div>
+  				<div class="move-box" id="box-5" v-on:click="makeMove(5)">
+  					<img v-bind:class="move5" v-show="squares[1][2]" :src="squares[1][2]" alt=" "/>
+  				</div>
+  			</div>
+  			<div class="row">
+  				<div class="move-box" id="box-6" v-on:click="makeMove(6)">
+  					<img v-bind:class="move6" v-show="squares[2][0]" :src="squares[2][0]" alt=" "/>
+  				</div>
+  				<div class="move-box" id="box-7" v-on:click="makeMove(7)">
+  					<img v-bind:class="move7" v-show="squares[2][1]" :src="squares[2][1]" alt=" "/>
+  				</div>
+  				<div class="move-box" id="box-8" v-on:click="makeMove(8)">
+  					<img v-bind:class="move8" v-show="squares[2][2]" :src="squares[2][2]" alt=" "/>
+  				</div>
+  			</div>
+  		</div>
+    </div>
+
+
 		<div id="name-alert" v-if="!validNames">
 			<h3 id="name-alert-text">Make sure both players have names (4 char. max)</h3>
 		</div>
-			
+
 		<div id="button-container">
 			<button v-if="gameover" id='play-again' v-on:click="playAgain()">Play Again!</button>
 			<button v-if="gameover" id='clear' v-on:click="clear()">Clear</button>
@@ -25,51 +64,81 @@
 </template>
 
 <script>
-// @ is an alias to /src
-import board from "@/components/board.vue";
-
 export default {
   name: "Play",
-  components: {
-    board,
-  },
 	data() {
 		return {
 			gameover: false,
-			xName: "", 
+			xName: "",
 			oName: "",
-			position: [['-', '-', '-'], 
-								['-', '-', '-'], 
+			position: [['-', '-', '-'],
+								['-', '-', '-'],
 								['-', '-', '-']],
+      turn: "x",
+      squares: [[false,false,false],
+							[false,false,false],
+							[false,false,false]],
 		}
 	},
+
+  watch: {
+		position: {
+			deep: true,
+			handler() {
+				let emptyBoard = true;
+				for (let i = 0; i < 3; i++) {
+					for (let j = 0; j < 3; j++) {
+						if (this.position[i][j] == "x") {
+							emptyBoard = false;
+							const newRow = this.squares[i].slice(0);
+							newRow[j] = require("@/assets/x.png");
+							this.$set(this.squares, i, newRow);
+						} else if (this.position[i][j] == "o") {
+							emptyBoard = false;
+							const newRow = this.squares[i].slice(0);
+							//newRow[j] = require("@/assets/o.jpg");
+							//newRow[j] = require("@/assets/o2.png");
+							newRow[j] = require("@/assets/o3.png");
+							this.$set(this.squares, i, newRow);
+						}
+					}
+				}
+				if (emptyBoard) {
+					this.$set(this.squares, 0, [false,false,false]);
+					this.$set(this.squares, 1, [false,false,false]);
+					this.$set(this.squares, 2, [false,false,false]);
+					this.turn = "x";
+				}
+			},
+		},
+	},
+
+
+
+
 	methods: {
-		onGameover(gameover) {
-			this.gameover = gameover; 
-			this.logGame(); 
-		}, 
 		logGame() {
 			let records = this.$root.$data.playerRecords;
-			// example record: {name: asdf, wins: 10, losses: 15, ties: 100} 
-			let xRecord = records.find(el => el.name == this.xName); 
-			let oRecord = records.find(el => el.name == this.oName); 
+			// example record: {name: asdf, wins: 10, losses: 15, ties: 100}
+			let xRecord = records.find(el => el.name == this.xName);
+			let oRecord = records.find(el => el.name == this.oName);
 			if (xRecord == undefined) {
-				xRecord = {name: this.xName, wins: 0, losses: 0, ties: 0}; 
-				records.push(xRecord); 
+				xRecord = {name: this.xName, wins: 0, losses: 0, ties: 0};
+				records.push(xRecord);
 			}
 			if (oRecord == undefined) {
-				oRecord = {name: this.oName, wins: 0, losses: 0, ties: 0}; 
-				records.push(oRecord); 
+				oRecord = {name: this.oName, wins: 0, losses: 0, ties: 0};
+				records.push(oRecord);
 			}
-				
+
 			if (this.gameover == "x-won") {
 				xRecord.wins++;
-				oRecord.losses++; 
+				oRecord.losses++;
 			} else if (this.gameover == "o-won") {
 				xRecord.losses++;
 				oRecord.wins++;
 			} else if (this.gameover == "t") {
-				xRecord.ties++; 
+				xRecord.ties++;
 				oRecord.ties++;
 			} else {
 				console.log("ERROR with gameover code");
@@ -77,32 +146,170 @@ export default {
 		},
 		playAgain() {
 			this.gameover = false;
-			this.position = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]; 
+			this.position = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']];
 		},
 		clear() {
 			this.gameover = false;
-			this.position = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']]; 
-			this.xName = ""; 
-			this.oName = ""; 
+			this.position = [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']];
+			this.xName = "";
+			this.oName = "";
 		},
-			 	
+
+
+
+
+
+    checkForFinish() {
+			// First check for an actual win
+			let p = this.position;
+			function checker(p1, p2, p3) {
+	 			if ((p1 == 'x') && (p2 == 'x') && (p3 == 'x')) {
+					return "x-won";
+				}
+				else if ((p1 == 'o') && (p2 == 'o') && (p3 == 'o')) {
+					return "o-won";
+				}
+				else {
+					return false;
+				}
+			}
+			let wins = [
+				checker(p[0][0], p[0][1], p[0][2]),
+				checker(p[1][0], p[1][1], p[1][2]),
+				checker(p[2][0], p[2][1], p[2][2]),
+				checker(p[0][0], p[1][0], p[2][0]),
+				checker(p[0][1], p[1][1], p[2][1]),
+				checker(p[0][2], p[1][2], p[2][2]),
+				checker(p[0][0], p[1][1], p[2][2]),
+				checker(p[0][2], p[1][1], p[2][0])];
+			for (const result of wins) {
+				if (result) {
+					return result;
+				}
+			}
+
+			if ((p[0][0] != '-') &&
+					(p[0][1] != '-') &&
+					(p[0][2] != '-') &&
+					(p[1][0] != '-') &&
+					(p[1][1] != '-') &&
+					(p[1][2] != '-') &&
+					(p[2][0] != '-') &&
+					(p[2][1] != '-') &&
+					(p[2][2] != '-')) {
+				return "t"
+			} else {
+				return false;
+			}
+		},
+
+		makeMove(move) {
+			if (this.gameover || !this.playable)
+				return
+			let row = Math.floor(move / 3);
+			let col = move % 3;
+			if (this.position[row][col] != "-") {
+				return;
+			} else {
+				//this.position[row][col] = this.turn;
+				const newRow = this.position[row].slice(0);
+				newRow[col] = this.turn;
+				this.$set(this.position, row, newRow);
+			}
+			switch(this.turn) {
+				case "x":
+					this.turn = "o";
+					break;
+				case "o":
+					this.turn = "x";
+					break;
+				default:
+					break;
+			}
+			this.gameover = this.checkForFinish();
+			if (this.gameover) {
+				this.logGame();
+			}
+		},
+
+
 	},
 	computed: {
-		validNames() {
-			return (this.xName != this.oName) 
-				&& !(/\s/g.test(this.xName)) 
+		playable() {
+			return (this.xName != this.oName)
+				&& !(/\s/g.test(this.xName))
 				&&  !(/\s/g.test(this.oName))
 				&& (this.xName != "")
-				&& (this.oName != ""); 
+				&& (this.oName != "");
 		},
-	}, 
+
+
+
+    move0: function() {
+			return {
+				x: this.position[0][0] == "x",
+				o: this.position[0][0] == "o"
+			}
+		},
+		move1: function() {
+			return {
+				x: this.position[0][1] == "x",
+				o: this.position[0][1] == "o"
+			}
+		},
+		move2: function() {
+			return {
+				x: this.position[0][2] == "x",
+				o: this.position[0][2] == "o"
+			}
+		},
+		move3: function() {
+			return {
+				x: this.position[1][0] == "x",
+				o: this.position[1][0] == "o"
+			}
+		},
+		move4: function() {
+			return {
+				x: this.position[1][1] == "x",
+				o: this.position[1][1] == "o"
+			}
+		},
+		move5: function() {
+			return {
+				x: this.position[1][2] == "x",
+				o: this.position[1][2] == "o"
+			}
+		},
+		move6: function() {
+			return {
+				x: this.position[2][0] == "x",
+				o: this.position[2][0] == "o"
+			}
+		},
+		move7: function() {
+			return {
+				x: this.position[2][1] == "x",
+				o: this.position[2][1] == "o"
+			}
+		},
+		move8: function() {
+			return {
+				x: this.position[2][2] == "x",
+				o: this.position[2][2] == "o"
+			}
+		},
+
+
+
+	},
 };
 </script>
 
 <style scoped>
 .play {
-	display: flex; 
-	flex-direction: column; 
+	display: flex;
+	flex-direction: column;
 }
 #player-names {
 	display:flex;
@@ -123,15 +330,11 @@ export default {
 	width:100px;
 }
 #name-alert {
-	display:flex; 
+	display:flex;
 	justify-content:center;
 }
 #name-alert-text {
-	padding: 0px 50px; 
-}
-#board {
-	margin-top:10px;
-	margin-bottom:10px;
+	padding: 0px 50px;
 }
 #button-container {
 	display:flex;
@@ -151,9 +354,93 @@ export default {
 	padding:4px;
 }
 
+.board {
+	display:flex;
+	flex-direction:column;
+	justify-content:center;
+	align-items:center;
+}
+#container{
+	display:flex;
+	flex-direction:column;
+	flex-wrap:wrap;
+	width:90vw;
+	height:90vw;
+	justify-content:center;
+	align-items:center;
+	margin:0 0;
+}
+.row {
+	display:flex;
+	flex-direction:row;
+	height:30vw;
+	width:100%;
+}
+.move-box {
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	flex-grow:1;
+	flex-basis:0;
+	margin:0 0;
+}
+.x {
+	width:70%;
+	height:70%;
+	object-fit:contain;
+}
+.o {
+	width:95%;
+	height:95%;
+	object-fit:contain;
+}
+#box-0 {
+	border-right:1px solid black;
+	border-bottom:1px solid black;
+}
+#box-1 {
+	border-left:1px solid black;
+	border-right:1px solid black;
+	border-bottom:1px solid black;
+}
+#box-2 {
+	border-left:1px solid black;
+	border-bottom:1px solid black;
+}
+#box-3 {
+	border-right:1px solid black;
+	border-top:1px solid black;
+	border-bottom:1px solid black;
+}
+#box-4 {
+	border-right:1px solid black;
+	border-left:1px solid black;
+	border-top:1px solid black;
+	border-bottom:1px solid black;
+}
+#box-5 {
+	border-left:1px solid black;
+	border-top:1px solid black;
+	border-bottom:1px solid black;
+}
+#box-6 {
+	border-right:1px solid black;
+	border-top:1px solid black;
+}
+#box-7 {
+	border-right:1px solid black;
+	border-left:1px solid black;
+	border-top:1px solid black;
+}
+#box-8 {
+	border-top:1px solid black;
+	border-left:1px solid black;
+}
+
 @media (min-width: 700px) {
 	#board {
 	}
 }
+
 
 </style>
