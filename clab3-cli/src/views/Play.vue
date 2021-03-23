@@ -10,7 +10,7 @@
 				<input type="text" id="oNameInput" v-model="yName" name="oNameInput" maxlength="4">
 			</form>
 		</div>
-    <board @gameover="onGameover" :turn="turn" :position="position" :playable="validNames"/>
+    <board @gameover="onGameover" :turn="turn" :position="position" :gameover="gameover" :playable="validNames"/>
 			
 		<button v-if="gameover" id='play-again' v-on:click="playAgain()">Play Again!</button>
   </div>

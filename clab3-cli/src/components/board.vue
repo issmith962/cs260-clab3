@@ -3,35 +3,35 @@
 		<div id="container">
 			<div class="row">
 				<div class="move-box" id="box-0" v-on:click="makeMove(0)">
-					<img v-show="show.box0" :src="boxes.box0" alt=" "/>
+					<img v-show="squares[0][0]" :src="squares[0][0]" alt=" "/>
 				</div>
 				<div class="move-box" id="box-1" v-on:click="makeMove(1)">
-					<img v-show="show.box1" :src="boxes.box1" alt=" "/>
+					<img v-show="squares[0][1]" :src="squares[0][1]" alt=" "/>
 				</div>
 				<div class="move-box" id="box-2" v-on:click="makeMove(2)">
-					<img v-show="show.box2" :src="boxes.box2" alt=" "/>
+					<img v-show="squares[0][2]" :src="squares[0][2]" alt=" "/>
 				</div>
 			</div>
 			<div class="row">
 				<div class="move-box" id="box-3" v-on:click="makeMove(3)">
-					<img v-show="show.box3" :src="boxes.box3" alt=" "/>
+					<img v-show="squares[1][0]" :src="squares[1][0]" alt=" "/>
 				</div>
 				<div class="move-box" id="box-4" v-on:click="makeMove(4)">
-					<img v-show="show.box4" :src="boxes.box4" alt=" "/>
+					<img v-show="squares[1][1]" :src="squares[1][1]" alt=" "/>
 				</div>
 				<div class="move-box" id="box-5" v-on:click="makeMove(5)">
-					<img v-show="show.box5" :src="boxes.box5" alt=" "/>
+					<img v-show="squares[1][2]" :src="squares[1][2]" alt=" "/>
 				</div>
 			</div>
 			<div class="row">
 				<div class="move-box" id="box-6" v-on:click="makeMove(6)">
-					<img v-show="show.box6" :src="boxes.box6" alt=" "/>
+					<img v-show="squares[2][0]" :src="squares[2][0]" alt=" "/>
 				</div>
 				<div class="move-box" id="box-7" v-on:click="makeMove(7)">
-					<img v-show="show.box7" :src="boxes.box7" alt=" "/>
+					<img v-show="squares[2][1]" :src="squares[2][1]" alt=" "/>
 				</div>
 				<div class="move-box" id="box-8" v-on:click="makeMove(8)">
-					<img v-show="show.box8" :src="boxes.box8" alt=" "/>
+					<img v-show="squares[2][2]" :src="squares[2][2]" alt=" "/>
 				</div>
 			</div>
 		</div>
@@ -42,9 +42,10 @@
 export default {
   name: "board",
   props: {
-    position: Array,
+	  position: Array,
 		turn: String,
 		playable: Boolean,
+		gameover: Boolean,
 		/*
 			"o" - o's turn
 			"x" - x's turn
@@ -52,35 +53,41 @@ export default {
   },
 	data() {
 		return {
-			gameover: false,
-			boxes: {
-				box0: "#",
-				box1: "#",
-				box2: "#",
-				box3: "#",
-				box4: "#",
-				box5: "#",
-				box6: "#",
-				box7: "#",
-				box8: "#",
-			},
-
-			show: {
-				box0: false,
-				box1: false,
-				box2: false,
-				box3: false,
-				box4: false,
-				box5: false,
-				box6: false,
-				box7: false,
-				box8: false,
-			},
-
+			squares: [[false,false,false],
+							[false,false,false],
+							[false,false,false]], 
 		}
 	},
-	computed: {
-
+	watch: {
+		position: {
+			deep: true, 
+			handler() {
+				debugger
+				let emptyBoard = true; 
+				for (let i = 0; i < 3; i++) {
+					for (let j = 0; j < 3; j++) {
+						if (this.position[i][j] == "x") {
+							emptyBoard = false;
+							//this.squares[i][j] = require("@/assets/x.png");
+							const newRow = this.squares[i].slice(0); 
+							newRow[j] = require("@/assets/x.png");
+							this.$set(this.squares, i, newRow); 
+						} else if (this.position[i][j] == "o") {
+							emptyBoard = false;
+							this.squares[i][j] = require("@/assets/o.jpg");
+							const newRow = this.squares[i].slice(0); 
+							newRow[j] = require("@/assets/o.jpg");
+							this.$set(this.squares, i, newRow); 
+						}
+					}
+				}
+				if (emptyBoard) {
+					this.$set(this.squares, 0, [false,false,false]);   
+					this.$set(this.squares, 1, [false,false,false]);   
+					this.$set(this.squares, 2, [false,false,false]);   
+				}
+			},
+		},
 	},
 	methods: {
 		checkForFinish() {
@@ -135,18 +142,17 @@ export default {
 			if (this.position[row][col] != "-") {
 				return;
 			} else {
-				this.position[row][col] = this.turn;
+				//this.position[row][col] = this.turn;
+				const newRow = this.position[row].slice(0); 
+				newRow[col] = this.turn; 
+				this.$set(this.position, row, newRow); 
 			}
 			switch(this.turn) {
 				case "x":
-					this.boxes["box" + move] = require("@/assets/x.png");
 					this.turn = "o";
-					this.show["box" + move] = true;
 					break;
 				case "o": 
-					this.boxes["box" + move] = require("@/assets/o.jpg");
 					this.turn = "x";
-					this.show["box" + move] = true;
 					break;
 				default:
 					break;
