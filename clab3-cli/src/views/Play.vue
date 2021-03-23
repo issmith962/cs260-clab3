@@ -52,10 +52,14 @@
     </div>
 
 
-		<div id="name-alert" v-if="!validNames">
+		<div id="name-alert" v-if="!playable">
 			<h3 id="name-alert-text">Make sure both players have names (4 char. max)</h3>
 		</div>
 
+		<div id="gameover-alert" v-if="gameover">
+			<h3 id="gameover-alert-text">{{ gameoverText }}</h3>
+		</div> 
+		
 		<div id="button-container">
 			<button v-if="gameover" id='play-again' v-on:click="playAgain()">Play Again!</button>
 			<button v-if="gameover" id='clear' v-on:click="clear()">Clear</button>
@@ -242,7 +246,12 @@ export default {
 				&& (this.xName != "")
 				&& (this.oName != "");
 		},
-
+		gameoverText() {
+			if (this.gameover == "x-won") return "X's Won!"; 
+			if (this.gameover == "o-won") return "O's Won!"; 
+			if (this.gameover == "t") return "It's a Tie!"; 
+			return ""; 
+		},
 
 
     move0: function() {
@@ -354,6 +363,9 @@ export default {
 	padding:4px;
 }
 
+
+
+
 .board {
 	display:flex;
 	flex-direction:column;
@@ -363,7 +375,7 @@ export default {
 #container{
 	display:flex;
 	flex-direction:column;
-	flex-wrap:wrap;
+	flex-wrap:row-wrap;
 	width:90vw;
 	height:90vw;
 	justify-content:center;
@@ -438,8 +450,15 @@ export default {
 }
 
 @media (min-width: 700px) {
-	#board {
+	#container {
+		width:65vh;
+		height:65vh;
 	}
+	.row {
+		height:20vh;
+		width:100%;
+	}
+
 }
 
 

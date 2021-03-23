@@ -2,22 +2,22 @@
   <div class="leaderboard">
 		<div id="ranking-grid">
 			<div class="row" id="column-headers">
-				<div>
+				<div class="headers">
 					<p>Rank</p>
 				</div>	
-				<div>
+				<div class="headers">
 					<p>Name</p>
 				</div>	
-				<div>
+				<div class="headers">
 					<p>Wins</p>
 				</div>	
-				<div>
+				<div class="headers">
 					<p>Losses</p>
 				</div>	
-				<div>
+				<div class="headers">
 					<p>Ties</p>
 				</div>	
-				<div>
+				<div class="headers">
 					<p>Delete?</p>
 				</div>	
 			</div>
@@ -92,7 +92,7 @@ export default {
 #ranking-grid {
 	display: flex; 
 	flex-direction: column; 
-	margin-bottom:10px;
+	margin: 10px 5px; 
 }
 #column-headers {
 	background-color: #b50717;
@@ -101,7 +101,6 @@ export default {
 	padding: 0px 5px;
 }
 #rankings {
-	padding: 0px 5px;
 }
 .row {
 	display:flex;
@@ -137,5 +136,17 @@ export default {
 	display:flex;
 	justify-content:center; 
 	align-items:center;
+}
+@media (min-width: 700px) {
+	.leaderboard {
+		display:flex;
+		justify-content:center;
+		align-items:center;
+	}
+	#ranking-grid {
+		width:60%;
+		border:5px solid #b50717;
+	}
+
 }
 </style>

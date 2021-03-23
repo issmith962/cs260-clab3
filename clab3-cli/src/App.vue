@@ -29,8 +29,12 @@
 #page {
 	display:flex;
 	flex-direction:column;
+	min-height:100vh;
 }
 
+::-webkit-scrollbar {
+	display:none;
+}
 #nav {
   padding: 20px;
 	padding-top: 20px;
