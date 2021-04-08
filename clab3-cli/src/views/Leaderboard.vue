@@ -1,5 +1,6 @@
 <template>
   <div class="leaderboard">
+		<button v-on:click="toggleEdit">{{editMessage}}</button>
 		<div id="ranking-grid">
 			<div class="row" id="column-headers">
 				<div class="headers">
@@ -18,7 +19,7 @@
 					<p>Ties</p>
 				</div>	
 				<div class="headers">
-					<p>Delete?</p>
+					<p>Delete</p>
 				</div>	
 			</div>
 			<div class="row" id="rankings" v-for="(record, index) in records" :key="record.id">
@@ -26,7 +27,8 @@
 					<p>{{"#" + (index + 1)}}</p>
 				</div>	
 				<div class="name">
-					<p>{{record.name}}</p>
+					<input v-if="editEnabled" type="text" maxlength="4" :name="'newName'+record.id" v-model="records[index].name"> 
+					<p v-else>{{record.name}}</p>
 				</div>	
 				<div class="wins">
 					<p>{{record.wins}}</p>
@@ -50,6 +52,8 @@ export default {
 	name: "Leaderboard",
 	data() {
 		return {
+			editEnabled: false,
+			editMessage: "Edit Player Names",
 		}
 	},
 	computed: {
@@ -76,6 +80,15 @@ export default {
 		},
 	},
 	methods: {
+		toggleEdit() {
+			if (this.editEnabled) {
+				this.$root.$data.playerRecords = this.records.slice(0);
+				this.editMessage = "Edit Player Names";
+			} else {
+				this.editMessage = "Save player name changes";
+			}
+			this.editEnabled = !this.editEnabled;
+		},
 		deleteRecord(record) {
 			for (let i = 0; i < this.$root.$data.playerRecords.length; i++) {
 				if (record === this.$root.$data.playerRecords[i]) {
@@ -89,6 +102,13 @@ export default {
 </script>
 
 <style scoped>
+.leaderboard {
+	display:flex;
+	flex-direction:column;
+}
+input {
+	width:50%;
+	}
 #ranking-grid {
 	display: flex; 
 	flex-direction: column; 
