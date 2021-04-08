@@ -140,6 +140,9 @@ input {
 	flex-grow:1; 
 }
 .name {
+	display:flex;
+	justify-content:center;
+	align-items:center;
 	flex-basis:0; 
 	flex-grow:1; 
 }
